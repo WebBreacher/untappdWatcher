@@ -10,6 +10,8 @@ from bs4 import BeautifulSoup
 import re
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
+import sqlite3
+import sys
 
 
 ####
@@ -20,6 +22,21 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 '''parser = argparse.ArgumentParser(description='Grab Untappd user activity')
 parser.add_argument('-b', '--bar', required=True, help='Bar/pub/brewery to research')
 args = parser.parse_args()'''
+
+def database_check():
+    # Check if a DB exists and is in the correct format
+    # If not, create one
+    try:
+        fh = open('untappdWatcher.sqlite3', 'a')
+    except:
+        print('[!!!] ERROR. Cannot open the untappdWatcher.db file for appending. Ensure the file exists and is writable by the script.')
+        sys.exit(1)
+    else:
+        print("[+] DB found and can be opened for appending")
+        fh.close()
+        # Try to connect to the DB
+        conn = sqlite3.connect('untappdWatcher.sqlite3')
+        print("[+] UntappdWatcher DB opened successfully")
 
 
 def get_data_from_untappd(url):
@@ -38,8 +55,7 @@ def get_data_from_untappd(url):
 
 def get_bar_data(passed_bar):
     # Parsing bar information
-    #url = 'https://untappd.com/user/{}'.format(passed_user)
-    print("\n[ ] USER DATA: Requesting {}".format(passed_bar))
+    print("\n[ ] Requesting {}".format(passed_bar))
     resp = get_data_from_untappd(passed_bar)
     html_doc = BeautifulSoup(resp, 'html.parser')
     bar1 = html_doc.find_all('a', 'time timezoner track-click')
@@ -56,6 +72,9 @@ def get_bar_data(passed_bar):
 
 # Suppress HTTPS warnings
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+
+# Check for DB
+database_check()
 
 ###############
 # Get bar info
