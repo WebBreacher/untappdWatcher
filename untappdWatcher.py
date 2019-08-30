@@ -52,7 +52,6 @@ def create_table():
     From https://www.sqlitetutorial.net/sqlite-python/create-tables/
     """
     create_table_sql = """CREATE TABLE IF NOT EXISTS watcher (
-                                    id INT PRIMARY KEY NOT NULL,
                                     barname TEXT NOT NULL,
                                     username TEXT NOT NULL,
                                     postdate TEXT NOT NULL);"""
@@ -63,6 +62,20 @@ def create_table():
     except Error as e:
         print('[!!!] Error! Cannot create table - {}'.format(e))
         sys.exit(1)
+
+def insert_bar_data(bar_data):
+    """
+    Create a new row into the bar_data table
+    :param conn:
+    :param bar_data:
+    :return: watcher id
+    https://www.sqlitetutorial.net/sqlite-python/insert/
+    """
+    sql = ''' INSERT INTO watcher(barname,username,postdate) VALUES(?,?,?) '''
+    conn = create_connection(db_file)
+    cur = conn.cursor()
+    cur.execute(sql, bar_data)
+    return cur.lastrowid
 
 def get_data_from_untappd(url):
     # Setting up and Making the Web Call
@@ -84,12 +97,20 @@ def get_bar_data(passed_bar):
     resp = get_data_from_untappd(passed_bar)
     html_doc = BeautifulSoup(resp, 'html.parser')
     bar1 = html_doc.find_all('a', 'time timezoner track-click')
-    bar_name = html_doc.title.string.strip(' - Untappd')
-    
-    print(bar_name)
+    barname = html_doc.title.string.strip(' - Untappd')
+    #print(barname)
 
     if bar1:
-        return bar1
+        for bar in bar1:
+            matchuserobj = re.findall('user/(.+)/checkin/.*?">(.+)</a>', str(bar), re.DOTALL)
+            if matchuserobj:
+                for user in matchuserobj:
+                    place = '{}, {}'.format(user[0],user[1])
+                    #print(place)
+                    bar_data = (barname, user[0], user[1])
+                    print(bar_data)
+                    id = insert_bar_data(bar_data)
+                    print(id)
 
 ###########################
 # Start
@@ -106,17 +127,11 @@ create_table()
 # Get bar info
 ###############
 #bar = get_bar_data('https://untappd.com/v/81bay-brewing-co/4883588')
-'''bar = get_bar_data('https://untappd.com/v/ford-s-garage/3103119')
+bar = get_bar_data('https://untappd.com/v/ford-s-garage/3103119')
 #bar = get_bar_data('https://untappd.com/v/4-creeks-brewhouse/8829089')
 
-for bar1 in bar:
-    matchuserobj = re.findall('user/(.+)/checkin/.*?">(.+)</a>', str(bar1), re.DOTALL)
-    if matchuserobj:
-        for user in matchuserobj:
-            place = '{}, {}'.format(user[0],user[1])
-            print(place)
-'''
 
+# not inserting into the DB
 
 # Check to see if there already is an entry for what we have
 
