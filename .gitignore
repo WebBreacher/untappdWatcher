@@ -1,0 +1,6 @@
+
+*.xml
+*.iml
+*.html
+*.csv
+.vscode
