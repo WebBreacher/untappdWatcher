@@ -1,0 +1,16 @@
+# Please enter the URL to the Untappd Bar you would
+# like to monitor below. The page must have a
+# "Recent Activity" section.
+https://untappd.com/v/brasserie-du-bas-canada/7022420
+https://untappd.com/v/burger-joint-new-york/4697906/activity
+https://untappd.com/v/de-blaffende-vis/254574
+https://untappd.com/v/delta-sky-club/62203
+https://untappd.com/v/delta-sky-club/5451749
+https://untappd.com/v/hop-the-beer-experience-2/4775629/activity
+https://untappd.com/v/jailbreak-brewing-company/1470416/activity
+https://untappd.com/v/london-s-pride/1680551
+https://untappd.com/v/tap-craft-beer-bar-one-raffles-link/2887707/activity
+https://untappd.com/v/tasting-room/4760372/activity
+https://untappd.com/v/united-club/106560
+https://untappd.com/v/united-club/883806
+https://untappd.com/v/westside-massive-big-shed-hq/5666363/activity

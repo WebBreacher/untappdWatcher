@@ -17,32 +17,38 @@ import sqlite3
 from sqlite3 import Error
 import sys
 
-# Change the lines below to be the bars you want to watch
-bars = [
-        "https://untappd.com/v/brasserie-du-bas-canada/7022420",
-        "https://untappd.com/v/burger-joint-new-york/4697906/activity",
-        "https://untappd.com/v/de-blaffende-vis/254574",
-        "https://untappd.com/v/delta-sky-club/62203",
-        "https://untappd.com/v/delta-sky-club/5451749",
-        "https://untappd.com/v/hop-the-beer-experience-2/4775629/activity",
-        "https://untappd.com/v/jailbreak-brewing-company/1470416/activity",
-        "https://untappd.com/v/london-s-pride/1680551",
-        "https://untappd.com/v/tap-craft-beer-bar-one-raffles-link/2887707/activity",
-        "https://untappd.com/v/tasting-room/4760372/activity",
-        "https://untappd.com/v/united-club/106560",
-        "https://untappd.com/v/united-club/883806",
-        "https://untappd.com/v/westside-massive-big-shed-hq/5666363/activity"
-        ]
-
+# Parse command line input
+parser = argparse.ArgumentParser(description='Grab Untappd user activity')
+parser.add_argument('-b', '--bar', help='Export entries about a single bar. Ex: "Westside Massive"')
+parser.add_argument('-d', '--date', help='Export entries about a single date. Ex: "04 Sep 2019"')
+parser.add_argument('-e', '--export', action='store_true', help='Export all records from DB to CSV')
+parser.add_argument('-l', '--location', help='Export entries about a single location. Ex: "Newark, NJ"')
+parser.add_argument('-n', '--new', action='store_true', help='Only show new entries')
+parser.add_argument('-t', '--time', help='Export entries about a single time. Ex: "14:09"')
+parser.add_argument('-u', '--user', help='Export entries about a single user. Ex: johndoe121')
+args = parser.parse_args()
 
 ####
 # Functions
 ####
 
-# Parse command line input
-parser = argparse.ArgumentParser(description='Grab Untappd user activity')
-parser.add_argument('-n', '--new', action='store_true', help='Only show new entries')
-args = parser.parse_args()
+def extract_bars():
+    bars = []
+    try:
+        infile = open('target_bars.txt','r')
+        for line in infile:
+            print(line)
+            matchObj = re.match( r'^https\://untappd\.com/.*', line)
+            if matchObj:
+                bars.append(line.strip())
+    except Error as e:
+        print('[!!!] Error! Cannot read the target_bars.txt file.')
+        sys.exit()
+    finally:
+        infile.close()
+
+    print(bars)
+    return bars
 
 def create_connection(db_file):
     conn = None
@@ -109,7 +115,7 @@ def get_bar_data(conn, db_file, passed_bar):
     with conn:
         if bar1:
             for bar in bar1:
-                matchuserobj = re.findall('user/(.+)/checkin/.*?">(.+) ([0-2][0-9]\:[0-5][0-9]\:[0-5][0-9]) \+0000</a>', str(bar), re.DOTALL)
+                matchuserobj = re.findall(r'user/(.+)/checkin/.*?">[A-Z][a-z][a-z], ([0-9][0-9] [A-Z][a-z][a-z] [12][0-9]{3}) ([0-2][0-9]:[0-5][0-9]:[0-5][0-9]) \+0000</a>', str(bar), re.DOTALL)
                 if matchuserobj:
                     for user in matchuserobj:
                         bar_data = (barnameloc[0], barnameloc[1],user[0], user[1], user[2])
@@ -121,6 +127,9 @@ def get_bar_data(conn, db_file, passed_bar):
 
 # Suppress HTTPS warnings
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+
+# Check input bar file and extract bars
+bars = extract_bars()
 
 # Set up the connection to the database
 db_file = r'untappdWatcher.sqlite3'
