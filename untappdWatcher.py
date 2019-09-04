@@ -37,7 +37,6 @@ def extract_bars():
     try:
         infile = open('target_bars.txt','r')
         for line in infile:
-            print(line)
             matchObj = re.match( r'^https\://untappd\.com/.*', line)
             if matchObj:
                 bars.append(line.strip())
