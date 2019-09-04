@@ -18,16 +18,21 @@ from sqlite3 import Error
 import sys
 
 # Change the lines below to be the bars you want to watch
-bars = ["https://untappd.com/BallastPoint",
-        "https://untappd.com/SingleCutBeersmiths",
-        "https://untappd.com/GreatNotionBrewing",
-        "https://untappd.com/CloudwaterBrewCo",
-        "https://untappd.com/BikerBrewhouse",
-        "https://untappd.com/TheVeilBrewingCo",
-        "https://untappd.com/AslinBeerCompany",
-        "https://untappd.com/jopen",
-        "https://untappd.com/brewdogbrewery",
-        "https://untappd.com/Pohjala"]
+bars = [
+        "https://untappd.com/v/brasserie-du-bas-canada/7022420",
+        "https://untappd.com/v/burger-joint-new-york/4697906/activity",
+        "https://untappd.com/v/delta-sky-club/62203",
+        "https://untappd.com/v/delta-sky-club/5451749",
+        "https://untappd.com/v/hop-the-beer-experience-2/4775629/activity",
+        "https://untappd.com/v/jailbreak-brewing-company/1470416/activity",
+        "https://untappd.com/v/london-s-pride/1680551",
+        "https://untappd.com/v/tap-craft-beer-bar-one-raffles-link/2887707/activity",
+        "https://untappd.com/v/tasting-room/4760372/activity",
+        "https://untappd.com/v/the-world-end-japanese-craft-towa/2704516",
+        "https://untappd.com/v/united-club/106560",
+        "https://untappd.com/v/united-club/883806",
+        "https://untappd.com/v/westside-massive-big-shed-hq/5666363/activity"
+        ]
 
 
 ####
