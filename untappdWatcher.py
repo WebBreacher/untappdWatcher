@@ -43,7 +43,7 @@ def extract_bars():
             if matchObj:
                 bars.append(line.strip())
     except Error as e:
-        print('[!!!] Error! Cannot read the target_bars.txt file.')
+        print('[ !!! ] Error! Cannot read the target_bars.txt file.')
         sys.exit()
     finally:
         infile.close()
@@ -56,7 +56,7 @@ def create_connection(db_file):
         conn = sqlite3.connect(db_file)
         return conn
     except Error as e:
-        print('[!!!] Error! Cannot connect to DB - {}'.format(e))
+        print('[ !!! ] Error! Cannot connect to DB - {}'.format(e))
         sys.exit()
     return conn
 
@@ -71,7 +71,7 @@ def create_table(conn, db_file):
         c = conn.cursor()
         c.execute(create_table_sql)
     except Error as e:
-        print('[!!!] Error! Cannot create table - {}'.format(e))
+        print('[ !!! ] Error! Cannot create table - {}'.format(e))
         sys.exit(1)
 
 def insert_bar_data(conn, bar_data):
@@ -87,9 +87,9 @@ def search_for_bar_data(conn, bar_data):
     rows = cur.fetchall()
     if rows:
         if not args.new:
-            print('[-] Found {}.'.format(rows))
+            print('[ - ] Found {}.'.format(rows))
     else:
-        print("[+] Inserting {}.".format(bar_data))
+        print("[ + ] Inserting {}.".format(bar_data))
         insert_bar_data(conn, bar_data)
 
 def get_data_from_untappd(url):
@@ -101,12 +101,12 @@ def get_data_from_untappd(url):
         response = requests.get(url, headers=headers, verify=False)
         return response.text
     except Exception as e:
-        print('[!]   ERROR - Untappd issue: {}'.format(str(e)))
+        print('[ !!! ]   ERROR - Untappd issue: {}'.format(str(e)))
         sys.exit(1)
 
 def get_bar_data(conn, db_file, passed_bar):
     # Parsing bar information
-    print("\n[ ] Requesting {}".format(passed_bar))
+    print("\n[   ] Requesting {}".format(passed_bar))
     resp = get_data_from_untappd(passed_bar)
     html_doc = BeautifulSoup(resp, 'html.parser')
     bar1 = html_doc.find_all('a', 'time timezoner track-click')
@@ -142,12 +142,12 @@ def export_db(conn, part, param):
     cur.execute(sql)
     rows = cur.fetchall()
     if rows:
-        print('[+] Exporting to file: {}'.format(outfile))
+        print('[ + ] Exporting to file: {}'.format(outfile))
         with open(outfile, 'w', newline='') as f:
             writer = csv.writer(f)
             writer.writerow(["Bar Name","Bar Location", "User Name", "Post Date", "Post Time"])
             writer.writerows(rows)
-        print('[+] Exported the following rows to CSV')
+        print('[ + ] Exported the following rows to CSV')
         for row in rows:
             print('   {}'.format(row))
 
@@ -169,7 +169,6 @@ conn = create_connection(db_file)
 create_table(conn, db_file)
 
 if args.export or args.date or args.location or args.time or args.user or args.bar:
-    print('[ ] Exporting Database and then exiting')
     part = 'full'
     param = ''
 
