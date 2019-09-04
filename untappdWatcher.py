@@ -47,7 +47,6 @@ def extract_bars():
     finally:
         infile.close()
 
-    print(bars)
     return bars
 
 def create_connection(db_file):
