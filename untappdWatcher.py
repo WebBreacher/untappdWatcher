@@ -10,12 +10,14 @@
 
 import argparse
 from bs4 import BeautifulSoup
+import csv
 import re
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 import sqlite3
 from sqlite3 import Error
 import sys
+import time
 
 # Parse command line input
 parser = argparse.ArgumentParser(description='Grab Untappd user activity')
@@ -119,8 +121,35 @@ def get_bar_data(conn, db_file, passed_bar):
                         bar_data = (barnameloc[0], barnameloc[1],user[0], user[1], user[2])
                         search_for_bar_data(conn, bar_data)
 
-def export_db(conn):
-    pass
+def export_db(conn, part, param):
+    timestr = time.strftime('%Y%m%d-%H%M%S')
+    outfile = 'output-{}-{}.csv'.format(part, timestr)
+
+    if part == 'date':
+        sql = "SELECT * FROM watcher WHERE postdate like '%{}%'".format(param)
+    elif part == 'time':
+        sql = "SELECT * FROM watcher WHERE posttime like '%{}%'".format(param)
+    elif part == 'barname':
+        sql = "SELECT * FROM watcher WHERE barname like '%{}%'".format(param)
+    elif part == 'location':
+        sql = "SELECT * FROM watcher WHERE barlocation like '%{}%'".format(param)
+    elif part == 'user':
+        sql = "SELECT * FROM watcher WHERE username like '%{}%'".format(param)
+    else:
+        sql = ''' SELECT * FROM watcher '''
+
+    cur = conn.cursor()
+    cur.execute(sql)
+    rows = cur.fetchall()
+    if rows:
+        print('[+] Exporting to file: {}'.format(outfile))
+        with open(outfile, 'w', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow(["Bar Name","Bar Location", "User Name", "Post Date", "Post Time"])
+            writer.writerows(rows)
+        print('[+] Exported the following rows to CSV')
+        for row in rows:
+            print('   {}'.format(row))
 
 ###########################
 # Start
@@ -138,6 +167,30 @@ conn = create_connection(db_file)
 
 # Check for/create DB table
 create_table(conn, db_file)
+
+if args.export or args.date or args.location or args.time or args.user or args.bar:
+    print('[ ] Exporting Database and then exiting')
+    part = 'full'
+    param = ''
+
+    if args.date:
+        part = 'date'
+        param = args.date
+    elif args.time:
+        part = 'time'
+        param = args.time
+    elif args.user:
+        part = 'user'
+        param = args.user
+    elif args.bar:
+        part = 'barname'
+        param = args.bar
+    elif args.location:
+        part = 'location'
+        param = args.location
+
+    export_db(conn, part, param)
+    exit()
 
 # Get bar info
 for bar in bars:
