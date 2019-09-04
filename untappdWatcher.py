@@ -17,14 +17,27 @@ import sqlite3
 from sqlite3 import Error
 import sys
 
+# Change the lines below to be the bars you want to watch
+bars = ["https://untappd.com/BallastPoint",
+        "https://untappd.com/SingleCutBeersmiths",
+        "https://untappd.com/GreatNotionBrewing",
+        "https://untappd.com/CloudwaterBrewCo",
+        "https://untappd.com/BikerBrewhouse",
+        "https://untappd.com/TheVeilBrewingCo",
+        "https://untappd.com/AslinBeerCompany",
+        "https://untappd.com/jopen",
+        "https://untappd.com/brewdogbrewery",
+        "https://untappd.com/Pohjala"]
+
+
 ####
 # Functions
 ####
 
 # Parse command line input
-'''parser = argparse.ArgumentParser(description='Grab Untappd user activity')
-parser.add_argument('-b', '--bar', required=True, help='Bar/pub/brewery to research')
-args = parser.parse_args()'''
+parser = argparse.ArgumentParser(description='Grab Untappd user activity')
+parser.add_argument('-n', '--new', action='store_true', help='Only show new entries')
+args = parser.parse_args()
 
 def create_connection(db_file):
     conn = None
@@ -34,7 +47,6 @@ def create_connection(db_file):
     except Error as e:
         print('[!!!] Error! Cannot connect to DB - {}'.format(e))
         sys.exit()
-
     return conn
 
 def create_table(conn, db_file):
@@ -61,7 +73,8 @@ def search_for_bar_data(conn, bar_data):
     cur.execute(sql, bar_data)
     rows = cur.fetchall()
     if rows:
-        print('[-] Found {}.'.format(rows))
+        if not args.new:
+            print('[-] Found {}.'.format(rows))
     else:
         print("[+] Inserting {}.".format(bar_data))
         insert_bar_data(conn, bar_data)
@@ -92,7 +105,6 @@ def get_bar_data(conn, db_file, passed_bar):
                 matchuserobj = re.findall('user/(.+)/checkin/.*?">(.+)</a>', str(bar), re.DOTALL)
                 if matchuserobj:
                     for user in matchuserobj:
-                        #place = '{}, {}'.format(user[0],user[1])
                         bar_data = (barname, user[0], user[1])
                         search_for_bar_data(conn, bar_data)
 
@@ -107,11 +119,9 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 db_file = r'untappdWatcher.sqlite3'
 conn = create_connection(db_file)
 
-# Check for DB table
+# Check for/create DB table
 create_table(conn, db_file)
 
 # Get bar info
-bar = get_bar_data(conn, db_file, 'https://untappd.com/v/81bay-brewing-co/4883588')
-bar = get_bar_data(conn, db_file, 'https://untappd.com/v/ford-s-garage/3103119')
-bar = get_bar_data(conn, db_file, 'https://untappd.com/v/4-creeks-brewhouse/8829089')
-
+for bar in bars:
+    get_bar_data(conn, db_file, bar)
