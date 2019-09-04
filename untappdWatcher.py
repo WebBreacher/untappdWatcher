@@ -149,7 +149,7 @@ def export_db(conn, part, param):
             writer.writerows(rows)
         print('[ + ] Exported the following rows to CSV')
         for row in rows:
-            print('   {}'.format(row))
+            print('         {}'.format(row))
 
 ###########################
 # Start
