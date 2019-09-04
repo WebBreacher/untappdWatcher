@@ -120,6 +120,9 @@ def get_bar_data(conn, db_file, passed_bar):
                         bar_data = (barnameloc[0], barnameloc[1],user[0], user[1], user[2])
                         search_for_bar_data(conn, bar_data)
 
+def export_db(conn):
+    pass
+
 ###########################
 # Start
 ###########################
