@@ -21,6 +21,7 @@ import sys
 bars = [
         "https://untappd.com/v/brasserie-du-bas-canada/7022420",
         "https://untappd.com/v/burger-joint-new-york/4697906/activity",
+        "https://untappd.com/v/de-blaffende-vis/254574",
         "https://untappd.com/v/delta-sky-club/62203",
         "https://untappd.com/v/delta-sky-club/5451749",
         "https://untappd.com/v/hop-the-beer-experience-2/4775629/activity",
@@ -28,7 +29,6 @@ bars = [
         "https://untappd.com/v/london-s-pride/1680551",
         "https://untappd.com/v/tap-craft-beer-bar-one-raffles-link/2887707/activity",
         "https://untappd.com/v/tasting-room/4760372/activity",
-        "https://untappd.com/v/the-world-end-japanese-craft-towa/2704516",
         "https://untappd.com/v/united-club/106560",
         "https://untappd.com/v/united-club/883806",
         "https://untappd.com/v/westside-massive-big-shed-hq/5666363/activity"
@@ -57,8 +57,10 @@ def create_connection(db_file):
 def create_table(conn, db_file):
     create_table_sql = """CREATE TABLE IF NOT EXISTS watcher (
                                     barname TEXT NOT NULL,
+                                    barlocation TEXT NOT NULL,
                                     username TEXT NOT NULL,
-                                    postdate TEXT NOT NULL);"""
+                                    postdate TEXT NOT NULL,
+                                    posttime TEXT NOT NULL);"""
     try:
         c = conn.cursor()
         c.execute(create_table_sql)
@@ -67,13 +69,13 @@ def create_table(conn, db_file):
         sys.exit(1)
 
 def insert_bar_data(conn, bar_data):
-    sql = ''' INSERT INTO watcher(barname,username,postdate) VALUES(?,?,?) '''
+    sql = ''' INSERT INTO watcher(barname,barlocation,username,postdate,posttime) VALUES(?,?,?,?,?) '''
     cur = conn.cursor()
     cur.execute(sql, bar_data)
     return cur.lastrowid
 
 def search_for_bar_data(conn, bar_data):
-    sql = ''' SELECT * FROM watcher WHERE barname=? AND username=? AND postdate=? '''
+    sql = ''' SELECT * FROM watcher WHERE barname=? AND barlocation=? AND username=? AND postdate=? and posttime=? '''
     cur = conn.cursor()
     cur.execute(sql, bar_data)
     rows = cur.fetchall()
@@ -102,15 +104,15 @@ def get_bar_data(conn, db_file, passed_bar):
     resp = get_data_from_untappd(passed_bar)
     html_doc = BeautifulSoup(resp, 'html.parser')
     bar1 = html_doc.find_all('a', 'time timezoner track-click')
-    barname = html_doc.title.string.strip(' - Untappd')
+    barnameloc = html_doc.title.string.split(' - ')
 
     with conn:
         if bar1:
             for bar in bar1:
-                matchuserobj = re.findall('user/(.+)/checkin/.*?">(.+)</a>', str(bar), re.DOTALL)
+                matchuserobj = re.findall('user/(.+)/checkin/.*?">(.+) ([0-2][0-9]\:[0-5][0-9]\:[0-5][0-9]) \+0000</a>', str(bar), re.DOTALL)
                 if matchuserobj:
                     for user in matchuserobj:
-                        bar_data = (barname, user[0], user[1])
+                        bar_data = (barnameloc[0], barnameloc[1],user[0], user[1], user[2])
                         search_for_bar_data(conn, bar_data)
 
 ###########################
