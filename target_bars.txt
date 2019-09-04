@@ -1,6 +1,7 @@
 # Please enter the URL to the Untappd Bar you would
 # like to monitor below. The page must have a
 # "Recent Activity" section.
+https://untappd.com/v/arsenal-tap-room-and-kitchen/5289819/activity
 https://untappd.com/v/brasserie-du-bas-canada/7022420
 https://untappd.com/v/burger-joint-new-york/4697906/activity
 https://untappd.com/v/de-blaffende-vis/254574
