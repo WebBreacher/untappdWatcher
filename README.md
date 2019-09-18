@@ -34,9 +34,24 @@ If you have PIP installed, type: `pip3 install -r requirements.txt` from the com
 ## Help command Output
 
 ```bash
-$  python3 untappdWatcher.py -h
+$ python3 untappdWatcher.py -h
+usage: untappdWatcher.py [-h] [-b BAR] [-d DATE] [-e] [-l LOCATION] [-n]
+                         [-t TIME] [-u USER]
 
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Grab Untappd user activity
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -b BAR, --bar BAR     Export entries about a single bar. Ex: "Westside
+                        Massive"
+  -d DATE, --date DATE  Export entries about a single date. Ex: "04 Sep 2019"
+  -e, --export          Export all records from DB to CSV
+  -l LOCATION, --location LOCATION
+                        Export entries about a single location. Ex: "Newark,
+                        NJ"
+  -n, --new             Only show new entries
+  -t TIME, --time TIME  Export entries about a single time. Ex: "14:09"
+  -u USER, --user USER  Export entries about a single user. Ex: johndoe121
 ```
 
 ## Example Output
