@@ -195,4 +195,4 @@ if args.export or args.date or args.location or args.time or args.user or args.b
 # Get bar info
 for bar in bars:
     get_bar_data(conn, db_file, bar)
-    time.sleep(uniform(2,8)) # Pause 2-8 seconds between requests to not get banned
+    time.sleep(uniform(1,9)) # Pause 2-8 seconds between requests to not get banned
