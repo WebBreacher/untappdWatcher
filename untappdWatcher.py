@@ -11,6 +11,7 @@
 import argparse
 from bs4 import BeautifulSoup
 import csv
+from random import *
 import re
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
@@ -106,7 +107,7 @@ def get_data_from_untappd(url):
 
 def get_bar_data(conn, db_file, passed_bar):
     # Parsing bar information
-    print("\n[   ] Requesting {}".format(passed_bar))
+    print("[   ] Requesting {}".format(passed_bar))
     resp = get_data_from_untappd(passed_bar)
     html_doc = BeautifulSoup(resp, 'html.parser')
     bar1 = html_doc.find_all('a', 'time timezoner track-click')
@@ -194,3 +195,4 @@ if args.export or args.date or args.location or args.time or args.user or args.b
 # Get bar info
 for bar in bars:
     get_bar_data(conn, db_file, bar)
+    time.sleep(uniform(2,8)) # Pause 2-8 seconds between requests to not get banned
