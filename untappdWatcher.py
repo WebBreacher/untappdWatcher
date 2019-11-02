@@ -26,6 +26,7 @@ parser.add_argument('-b', '--bar', help='Export entries about a single bar. Ex: 
 parser.add_argument('-d', '--date', help='Export entries about a single date. Ex: "04 Sep 2019"')
 parser.add_argument('-e', '--export', action='store_true', help='Export all records from DB to CSV')
 parser.add_argument('-l', '--location', help='Export entries about a single location. Ex: "Newark, NJ"')
+parser.add_argument('-m', '--multiple', help='Export entries where we have more than 4 events for a single user')
 parser.add_argument('-n', '--new', action='store_true', help='Only show new entries')
 parser.add_argument('-t', '--time', help='Export entries about a single time. Ex: "14:09"')
 parser.add_argument('-u', '--user', help='Export entries about a single user. Ex: johndoe121')
@@ -136,6 +137,8 @@ def export_db(conn, part, param):
         sql = "SELECT * FROM watcher WHERE barlocation like '%{}%'".format(param)
     elif part == 'user':
         sql = "SELECT * FROM watcher WHERE username like '%{}%'".format(param)
+    elif part == 'multiple':
+        sql = "SELECT * FROM watcher WHERE username IN (SELECT username FROM watcher GROUP BY username HAVING COUNT(username) > 4) ORDER BY username,postdate,posttime DESC;"
     else:
         sql = ''' SELECT * FROM watcher '''
 
@@ -188,6 +191,8 @@ if args.export or args.date or args.location or args.time or args.user or args.b
     elif args.location:
         part = 'location'
         param = args.location
+    elif args.multiple:
+        part = 'multiple'
 
     export_db(conn, part, param)
     exit()
@@ -195,4 +200,4 @@ if args.export or args.date or args.location or args.time or args.user or args.b
 # Get bar info
 for bar in bars:
     get_bar_data(conn, db_file, bar)
-    time.sleep(uniform(1,9)) # Pause 2-8 seconds between requests to not get banned
+    time.sleep(uniform(1,9)) # Pause 1-9 seconds between requests to not get banned
