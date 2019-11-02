@@ -172,7 +172,7 @@ conn = create_connection(db_file)
 # Check for/create DB table
 create_table(conn, db_file)
 
-if args.export or args.date or args.location or args.time or args.user or args.bar:
+if args.export or args.date or args.location or args.time or args.user or args.bar or args.multiple:
     part = 'full'
     param = ''
 
