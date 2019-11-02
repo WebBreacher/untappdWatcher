@@ -26,7 +26,7 @@ parser.add_argument('-b', '--bar', help='Export entries about a single bar. Ex: 
 parser.add_argument('-d', '--date', help='Export entries about a single date. Ex: "04 Sep 2019"')
 parser.add_argument('-e', '--export', action='store_true', help='Export all records from DB to CSV')
 parser.add_argument('-l', '--location', help='Export entries about a single location. Ex: "Newark, NJ"')
-parser.add_argument('-m', '--multiple', help='Export entries where we have more than 4 events for a single user')
+parser.add_argument('-m', '--multiple', action='store_true', help='Export entries where we have more than 4 events for a single user')
 parser.add_argument('-n', '--new', action='store_true', help='Only show new entries')
 parser.add_argument('-t', '--time', help='Export entries about a single time. Ex: "14:09"')
 parser.add_argument('-u', '--user', help='Export entries about a single user. Ex: johndoe121')
