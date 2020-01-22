@@ -97,8 +97,15 @@ def search_for_bar_data(conn, bar_data):
 def get_data_from_untappd(url):
     # Setting up and Making the Web Call
     try:
-        user_agent = 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:66.0) Gecko/20100101 Firefox/69.0'
-        headers = {'User-Agent': user_agent}
+        agents = ['Mozilla/4.0 (Windows NT 8.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36',
+                  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36',
+                  'Mozilla/5.0 (Windows NT 8.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0',
+                  'Mozilla/5.0 (Windows NT 8.1; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0',
+                  'Mozilla/5.0 (Windows NT 8.1; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0',
+                  'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0',
+                  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.18363'
+                  ]
+        headers = {'User-Agent': choice(agents)}
         # Make web request for that URL and don't verify SSL/TLS certs
         response = requests.get(url, headers=headers, verify=False)
         return response.text
@@ -200,4 +207,4 @@ if args.export or args.date or args.location or args.time or args.user or args.b
 # Get bar info
 for bar in bars:
     get_bar_data(conn, db_file, bar)
-    time.sleep(uniform(1,9)) # Pause 1-9 seconds between requests to not get banned
+    time.sleep(uniform(1,99)) # Pause 1-9 seconds between requests to not get banned
