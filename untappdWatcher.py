@@ -2,10 +2,7 @@
 """
     Author: Micah Hoffman (@WebBreacher)
     Purpose: To look up a bar/pub/brewery on Untappd.com and watch who drinks there
-    Inspired by Ryan in my SEC487 class!
     https://github.com/WebBreacher/untappdWatcher
-
-    Huge thanks to https://www.sqlitetutorial.net/sqlite-python/insert/ for the sqlite python help
 """
 
 import argparse
@@ -97,11 +94,11 @@ def search_for_bar_data(conn, bar_data):
 def get_data_from_untappd(url):
     # Setting up and Making the Web Call
     try:
-        agents = ['Mozilla/4.0 (Windows NT 8.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36',
-                  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36',
-                  'Mozilla/5.0 (Windows NT 8.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0',
+        agents = ['Mozilla/4.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.3987.110 Safari/537.36',
+                  'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/117.0',
+                  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36 Edg/117.0.2045.36',
                   'Mozilla/5.0 (Windows NT 8.1; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0',
-                  'Mozilla/5.0 (Windows NT 8.1; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0',
+                  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36',
                   'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0',
                   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.18363'
                   ]
